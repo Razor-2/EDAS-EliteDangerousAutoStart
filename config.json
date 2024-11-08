@@ -1,0 +1,16 @@
+{
+    "commanders": [
+        [
+            "Demo-Commander",
+            "Demo-Commander.bat"
+        ]
+    ],
+    "programs": [
+        [
+            "Demo-Programm",
+            "C:/Users/marku/PycharmProjects/edas_alt/Programm 1.exe",
+            true
+        ]
+    ],
+    "selected_cmdr": ""
+}

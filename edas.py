@@ -216,11 +216,27 @@ def add_program(file_path=None, name=None, var=None):
     else:
         messagebox.showwarning("Limit erreicht", "Es können nur 8 Programme hinzugefügt werden.")
 
+import subprocess
+import os
+
 # Funktion zum Starten ausgewählter Programme
 def start_selected():
-    for checkbox, file_path, var in cmdr_checkboxes + program_checkboxes:
-        if var.get():
-            os.startfile(file_path)
+    # Verarbeitung der Commander-Radiobuttons
+    for radiobutton, file_path in cmdr_checkboxes:
+        if selected_cmdr.get() == file_path:  # Prüfe, ob dieser Commander ausgewählt ist
+            if file_path.endswith(".bat"):
+                subprocess.Popen(file_path, shell=True)
+            else:
+                os.startfile(file_path)
+
+    # Verarbeitung der Programme-Checkboxen
+    for checkbox, file_path, var in program_checkboxes:
+        if var.get():  # Prüfe, ob das Programm ausgewählt ist
+            if file_path.endswith(".bat"):
+                subprocess.Popen(file_path, shell=True)
+            else:
+                os.startfile(file_path)
+
 
 # Funktion zum Löschen einer Checkbox oder eines Radiobuttons
 def delete_selected():
@@ -269,8 +285,13 @@ def show_Anleitung():
     help_window.geometry("500x600")  # Fenstergröße nach Bedarf anpassen
     help_window.configure(bg='#000d17')  # Hintergrundfarbe
 
+    # Icon einfügen
+    icon_path = resource_path("edas.ico")
+    if os.path.exists(icon_path):
+        help_window.iconbitmap(icon_path)
+
     # Scrollbar hinzufügen, falls der Text länger ist als das Fenster
-    text_widget = tk.Text(help_window, wrap="word", bg="#000d17", fg="white", font=("Helvetica", 12))
+    text_widget = tk.Text(help_window, wrap="word", bg="#000d17", borderwidth=0, fg="white", font=("Helvetica", 12))
     scrollbar = tk.Scrollbar(help_window, command=text_widget.yview)
     text_widget.configure(yscrollcommand=scrollbar.set)
 
@@ -325,7 +346,7 @@ def show_Anleitung():
     text_widget.configure(state="disabled")  # Setze das Text-Widget auf schreibgeschützt
 
     # Widgets positionieren
-    text_widget.pack(side="left", fill="both", expand=True)
+    text_widget.pack(side="left", fill="both", expand=True, padx=10, pady=10,)
     scrollbar.pack(side="right", fill="y")
 
 # Menüleiste erstellen
@@ -369,7 +390,7 @@ menu_bar.add_cascade(label="Bearbeiten", menu=edit_menu)
 
 # "Hilfe"-Menü
 help_menu = tk.Menu(menu_bar, tearoff=0)
-help_menu.add_command(label="Über EDAS", command=lambda: messagebox.showinfo("Über EDAS", "EDAS - Elite Dangerous Auto Start\nVersion 1.0.0\n(C) 2024 Razor 2"))
+help_menu.add_command(label="Über EDAS", command=lambda: messagebox.showinfo("Über EDAS", "EDAS - Elite Dangerous Auto Start\nVersion 1.0.1\n(C) 2024 Razor 2"))
 help_menu.add_command(label="Anleitung", command=show_Anleitung)
 menu_bar.add_cascade(label="Hilfe", menu=help_menu)
 

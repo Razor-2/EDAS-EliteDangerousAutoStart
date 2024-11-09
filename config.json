@@ -1,16 +1,16 @@
 {
     "commanders": [
         [
-            "Demo-Commander",
+            "CMDR Demo",
             "Demo-Commander.bat"
         ]
     ],
     "programs": [
         [
             "Demo-Programm",
-            "C:/Users/marku/PycharmProjects/edas_alt/Programm 1.exe",
+            "Demo-Programm.exe",
             true
         ]
     ],
-    "selected_cmdr": ""
+    "selected_cmdr": "Demo-Commander.bat"
 }

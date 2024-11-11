@@ -45,16 +45,16 @@ import json
 config_file = "config.json"
 
 
-# Funktion zum Speichern der Konfiguration mit relativen Pfaden
+# Funktion zum Speichern der Konfiguration mit absoluten Pfaden
 def save_config():
     config_data = {
         "commanders": [
-            [radiobutton.cget("text"), os.path.basename(file_path)] for radiobutton, file_path in cmdr_checkboxes
+            [radiobutton.cget("text"), os.path.abspath(file_path)] for radiobutton, file_path in cmdr_checkboxes
         ],
         "programs": [
-            [checkbox.cget("text"), os.path.basename(file_path), var.get()] for checkbox, file_path, var in program_checkboxes
+            [checkbox.cget("text"), os.path.abspath(file_path), var.get()] for checkbox, file_path, var in program_checkboxes
         ],
-        "selected_cmdr": os.path.basename(selected_cmdr.get()) if selected_cmdr.get() else ""
+        "selected_cmdr": os.path.abspath(selected_cmdr.get()) if selected_cmdr.get() else ""
     }
     try:
         with open(config_file, 'w') as f:
@@ -63,6 +63,7 @@ def save_config():
     except Exception as e:
         print(f"Fehler beim Speichern der Konfiguration: {e}")
 
+
 # Funktion zum Laden der Konfiguration und Konvertieren zu absoluten Pfaden
 def load_config():
     if os.path.exists(config_file):
@@ -70,39 +71,31 @@ def load_config():
             with open(config_file, 'r') as f:
                 config_data = json.load(f)
 
-            # Basispfad des Programms
-            base_dir = os.path.abspath(os.path.dirname(__file__))
-
             # Lade Commander und konvertiere zu absoluten Pfaden
-            for name, relative_path in config_data.get("commanders", []):
-                # Erzeuge den absoluten Pfad, falls es sich um einen relativen Pfad handelt
-                abs_path = relative_path if os.path.isabs(relative_path) else os.path.join(base_dir, relative_path)
+            for name, path in config_data.get("commanders", []):
+                abs_path = os.path.abspath(path)
                 add_cmdr(abs_path, name)
 
             # Lade Programme und konvertiere zu absoluten Pfaden
             for item in config_data.get("programs", []):
                 if len(item) == 3:
-                    name, relative_path, selected = item
-                    # Erzeuge den absoluten Pfad, falls es sich um einen relativen Pfad handelt
-                    abs_path = relative_path if os.path.isabs(relative_path) else os.path.join(base_dir, relative_path)
+                    name, path, selected = item
+                    abs_path = os.path.abspath(path)
                     var = tk.BooleanVar()
                     var.set(selected)
                     add_program(abs_path, name, var)
 
-            # Setze den ausgewählten Commander, falls vorhanden, mit absolutem Pfad
+            # Setze den ausgewählten Commander mit absolutem Pfad
             selected_cmdr_value = config_data.get("selected_cmdr")
             if selected_cmdr_value:
-                abs_cmdr_path = (
-                    selected_cmdr_value if os.path.isabs(selected_cmdr_value)
-                    else os.path.join(base_dir, selected_cmdr_value)
-                )
-                selected_cmdr.set(abs_cmdr_path)
+                selected_cmdr.set(os.path.abspath(selected_cmdr_value))
 
             print("Konfiguration geladen.")
         except Exception as e:
             print(f"Fehler beim Laden der Konfiguration: {e}")
     else:
         print("Keine Konfigurationsdatei gefunden.")
+
 
 
 
@@ -167,12 +160,12 @@ def create_bat_file():
 tasklist /FI "IMAGENAME eq steam.exe" | findstr /I steam.exe
 if not errorlevel 1 (
     taskkill /F /IM steam.exe
-    timeout /t 2 /nobreak
+    timeout /t 1 /nobreak
 ) else (
     echo Steam ist nicht gestartet, daher wird nichts beendet.
 )
 start "" "{steam_path}" -silent -login {username} {password}
-timeout /t 5 /nobreak
+timeout /t 2 /nobreak
 start "" steam://rungameid/359320
 exit
     """

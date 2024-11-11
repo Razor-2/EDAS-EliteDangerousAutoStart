@@ -437,7 +437,7 @@ menu_bar.add_cascade(label="Bearbeiten", menu=edit_menu)
 
 # "Hilfe"-Menü
 help_menu = tk.Menu(menu_bar, tearoff=0)
-help_menu.add_command(label="Über EDAS", command=lambda: messagebox.showinfo("Über EDAS", "EDAS - Elite Dangerous Auto Start\nVersion 1.0.2\n(C) 2024 Razor 2"))
+help_menu.add_command(label="Über EDAS", command=lambda: messagebox.showinfo("Über EDAS", "EDAS - Elite Dangerous Auto Start\nVersion 1.0.4\n(C) 2024 Razor 2"))
 help_menu.add_command(label="Anleitung", command=show_Anleitung)
 menu_bar.add_cascade(label="Hilfe", menu=help_menu)
 

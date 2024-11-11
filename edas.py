@@ -42,7 +42,7 @@ import os
 import json
 
 # Pfad zur Konfigurationsdatei im Unterverzeichnis _internal
-config_file = os.path.join("_internal", "config.json")
+config_file = "config.json"
 
 
 # Funktion zum Speichern der Konfiguration mit relativen Pfaden

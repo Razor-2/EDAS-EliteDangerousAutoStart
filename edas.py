@@ -12,8 +12,6 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
-# Pfad zur Konfigurationsdatei
-config_file = "config.json"
 
 # GUI erstellen
 root = tk.Tk()
@@ -43,8 +41,9 @@ program_checkboxes = []
 import os
 import json
 
-# Pfad zur Konfigurationsdatei
-config_file = "config.json"
+# Pfad zur Konfigurationsdatei im Unterverzeichnis _internal
+config_file = os.path.join("_internal", "config.json")
+
 
 # Funktion zum Speichern der Konfiguration mit relativen Pfaden
 def save_config():
@@ -165,7 +164,7 @@ if not errorlevel 1 (
 ) else (
     echo Steam ist nicht gestartet, daher wird nichts beendet.
 )
-start "" "{steam_path}" -login {username} {password}
+start "" "{steam_path}" -silent -login {username} {password}
 timeout /t 5 /nobreak
 start "" steam://rungameid/359320
 exit
@@ -431,7 +430,7 @@ menu_bar.add_cascade(label="Bearbeiten", menu=edit_menu)
 
 # "Hilfe"-Menü
 help_menu = tk.Menu(menu_bar, tearoff=0)
-help_menu.add_command(label="Über EDAS", command=lambda: messagebox.showinfo("Über EDAS", "EDAS - Elite Dangerous Auto Start\nVersion 1.0.1\n(C) 2024 Razor 2"))
+help_menu.add_command(label="Über EDAS", command=lambda: messagebox.showinfo("Über EDAS", "EDAS - Elite Dangerous Auto Start\nVersion 1.0.2\n(C) 2024 Razor 2"))
 help_menu.add_command(label="Anleitung", command=show_Anleitung)
 menu_bar.add_cascade(label="Hilfe", menu=help_menu)
 

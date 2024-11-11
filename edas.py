@@ -73,30 +73,37 @@ def load_config():
             # Basispfad des Programms
             base_dir = os.path.abspath(os.path.dirname(__file__))
 
-            # Lade Commander und konvertiere Pfade
+            # Lade Commander und konvertiere zu absoluten Pfaden
             for name, relative_path in config_data.get("commanders", []):
-                abs_path = os.path.join(base_dir, relative_path)
+                # Erzeuge den absoluten Pfad, falls es sich um einen relativen Pfad handelt
+                abs_path = relative_path if os.path.isabs(relative_path) else os.path.join(base_dir, relative_path)
                 add_cmdr(abs_path, name)
 
-            # Lade Programme und konvertiere Pfade
+            # Lade Programme und konvertiere zu absoluten Pfaden
             for item in config_data.get("programs", []):
                 if len(item) == 3:
                     name, relative_path, selected = item
-                    abs_path = os.path.join(base_dir, relative_path)
+                    # Erzeuge den absoluten Pfad, falls es sich um einen relativen Pfad handelt
+                    abs_path = relative_path if os.path.isabs(relative_path) else os.path.join(base_dir, relative_path)
                     var = tk.BooleanVar()
                     var.set(selected)
                     add_program(abs_path, name, var)
 
-            # Setze den ausgewählten Commander, falls vorhanden
+            # Setze den ausgewählten Commander, falls vorhanden, mit absolutem Pfad
             selected_cmdr_value = config_data.get("selected_cmdr")
             if selected_cmdr_value:
-                selected_cmdr.set(os.path.join(base_dir, selected_cmdr_value))
+                abs_cmdr_path = (
+                    selected_cmdr_value if os.path.isabs(selected_cmdr_value)
+                    else os.path.join(base_dir, selected_cmdr_value)
+                )
+                selected_cmdr.set(abs_cmdr_path)
 
             print("Konfiguration geladen.")
         except Exception as e:
             print(f"Fehler beim Laden der Konfiguration: {e}")
     else:
         print("Keine Konfigurationsdatei gefunden.")
+
 
 
 import winreg
